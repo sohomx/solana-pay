@@ -144,7 +144,7 @@ export default function Checkout() {
         <p>{message} Please approve the transaction using your wallet</p>
       ) : (
         <p>
-          Creating transaction... <Loading />
+          Creating transaction.... <Loading />
         </p>
       )}
     </div>

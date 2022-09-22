@@ -1,4 +1,4 @@
-import { useWallet } from '@solana/wallet-adapter-react'
+import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { Keypair, Transaction } from '@solana/web3.js'
 import { useRouter } from 'next/router'
@@ -12,13 +12,14 @@ import {
 
 export default function Checkout() {
   const router = useRouter()
-  const { publicKey } = useWallet()
+  const { connection } = useConnection()
+  const { publicKey, sendTransaction } = useWallet()
 
-  // state to hold API response fields
+  // State to hold API response fields
   const [transaction, setTransaction] = useState<Transaction | null>(null)
   const [message, setMessage] = useState<string | null>(null)
 
-  // reading the URL query (which includes our chosen products)
+  // Read the URL query (which includes our chosen products)
   const searchParams = new URLSearchParams()
   for (const [key, value] of Object.entries(router.query)) {
     if (value) {
@@ -32,7 +33,7 @@ export default function Checkout() {
     }
   }
 
-  // generate the unique reference which will be used for this transaction
+  // Generate the unique reference which will be used for this transaction
   const reference = useMemo(() => Keypair.generate().publicKey, [])
 
   // Add it to the params we'll pass to the API
@@ -63,6 +64,7 @@ export default function Checkout() {
 
     if (response.status !== 200) {
       console.error(json)
+      return
     }
 
     // Deserialize the transaction from the response
@@ -78,11 +80,28 @@ export default function Checkout() {
     getTransaction()
   }, [publicKey])
 
+  // Send the fetched transaction to the connected wallet
+  async function trySendTransaction() {
+    if (!transaction) {
+      return
+    }
+    try {
+      await sendTransaction(transaction, connection)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  // Send the transaction once it's fetched
+  useEffect(() => {
+    trySendTransaction()
+  }, [transaction])
+
   if (!publicKey) {
     return (
       <div className="flex flex-col items-center gap-8">
         <div>
-          <BackLink href="/">Cancel</BackLink>
+          <BackLink href="/buy">Cancel</BackLink>
         </div>
 
         <WalletMultiButton />
@@ -95,7 +114,7 @@ export default function Checkout() {
   return (
     <div className="flex flex-col items-center gap-8">
       <div>
-        <BackLink href="/">Cancel</BackLink>
+        <BackLink href="/buy">Cancel</BackLink>
       </div>
 
       <WalletMultiButton />

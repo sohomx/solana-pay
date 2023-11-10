@@ -1,5 +1,8 @@
 # Take payments IRL with Solana Pay
 
+Solana Pay is a specification for payments on Solana. It describes a way to encode a payment request in a URL, which can be displayed to users - for example as a QR code. And Solana mobile wallets are adding support for it, so users can seamlessly scan that QR code and make the payment.
+
+
 <p align="center">
 <!-- <a href=https://github.com/sohomx/solana-pay target="_blank">
 <img src='/placeholder.jpg' width="100%" alt="Banner" /> -->
@@ -42,6 +45,8 @@
 - [react-dom](https://reactjs.org/docs/react-dom.html): Entry point for rendering React components.
 - [typescript](https://www.typescriptlang.org/): Typed superset of JavaScript that compiles to plain JavaScript.
 - [bignumber.js](https://github.com/MikeMcl/bignumber.js/): JavaScript library for arbitrary-precision decimal arithmetic.
+
+<img width="1028" alt="image" src="https://github.com/sohomx/solana-pay/assets/84140043/b604db48-f1f2-4d25-90bd-c22e098aab0d">
 
 ## 📝 Project Summary
 
